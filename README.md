@@ -1,3 +1,5 @@
 # PIKD
 iOS game using SpriteKit
-![alt text](http:/![alt text](https://raw.githubusercontent.com/Manguelo/projectname/master/PIKD/Pop The Lock/Assets.xcassets/AppIcon.appiconset/PIKD copy.png)
+
+
+![alt PIKD image](https://raw.githubusercontent.com/Manguelo/PIKD/master/PIKD/Pop%20The%20Lock/Assets.xcassets/AppIcon.appiconset/PIKD%20copy.png)
