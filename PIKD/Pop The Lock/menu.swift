@@ -9,14 +9,19 @@
 import Foundation
 import SpriteKit
 import StoreKit
+import GoogleMobileAds
 
 var modeLabel = SKLabelNode()
 var randomHue =  CGFloat(Float(arc4random()) / Float(UINT32_MAX))
 var currentColor = UIColor(hue: randomHue, saturation: 0.34, brightness: 0.8, alpha: 1)
 
 
-class menu: SKScene {
+class menu: SKScene, GADBannerViewDelegate {
     var mainCamera = SKCameraNode()
+    
+    var line1 = SKSpriteNode()
+    var line2 = SKSpriteNode()
+    var line3 = SKSpriteNode()
     
     var leftArrow = SKSpriteNode()
     var rightArrow = SKSpriteNode()
@@ -28,10 +33,16 @@ class menu: SKScene {
     var currentScore = Int()
     var highLevel = Int()
     
-    let Defaults = UserDefaults.standard as UserDefaults!
+    let Defaults = UserDefaults.standard as UserDefaults?
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+    
     override func didMove(to view: SKView) {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.size = CGSize(width: 1433, height: 1912)
+        }
+        
+        //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "loadInterstitial"), object: nil)
         /* START - Temp fix to format app for iPhone X */
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {
@@ -49,6 +60,12 @@ class menu: SKScene {
         rightArrow = self.childNode(withName: "rightArrow") as! SKSpriteNode
         modeLabel = self.childNode(withName: "modeLabel") as! SKLabelNode
         soundIMG = self.childNode(withName: "soundIMG") as! SKSpriteNode
+        
+        setupLines()
+       
+        moveLine(line: line1, duration: 1.5)
+        moveLine(line: line2, duration: 1.5)
+        moveLine(line: line3, duration: 1.5)
         
         getHighScore()
         
@@ -86,12 +103,12 @@ class menu: SKScene {
                         let gameScene = SKScene(fileNamed: "GameScene")
                         gameScene?.scaleMode = .aspectFit
                         emptyScreen()
-                        run(SKAction.wait(forDuration: 0.5), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
+                        run(SKAction.wait(forDuration: 0.7), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
                     }else if modeLabel.text == "Survival" {
                         let gameScene = SKScene(fileNamed: "SurvivalMode")
                         gameScene?.scaleMode = .aspectFit
                         emptyScreen()
-                        run(SKAction.wait(forDuration: 0.5), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
+                        run(SKAction.wait(forDuration: 0.7), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
                     }
                     print("play")
                 }else if nodeName == "rateButton"{
@@ -106,12 +123,13 @@ class menu: SKScene {
                     soundButtonPressed()
                     print("sound")
                 }else if nodeName == "shareButton"{
-                    quickResize(nodeName: nodeName, size: 75, duration: 0.1)
+                    //quickResize(nodeName: nodeName, size: 75, duration: 0.1)
                     shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
                     print("share")
                 }else if nodeName == "leaderBoardButton"{
-                    quickResize(nodeName: nodeName, size: 75, duration: 0.1)
+                    //quickResize(nodeName: nodeName, size: 75, duration: 0.1)
                     print("Board")
+                    NotificationCenter.default.post(name: NSNotification.Name("showLeaderBoard"), object: nil)
 
                 }
                 
@@ -124,7 +142,7 @@ class menu: SKScene {
     func soundButtonPressed(){
         if Defaults?.bool(forKey: "soundOff") == false{
             //backgroundMusicPlayer.pause()
-            self.childNode(withName: "soundIMG")?.alpha = 1
+            self.childNode(withName: "soundIMG")?.alpha = 0.5
             //                        soundOff.isHidden = false
             //                        soundOff.alpha = 1
             Defaults?.set(true, forKey: "soundOff")
@@ -132,7 +150,7 @@ class menu: SKScene {
         }else if Defaults?.bool(forKey: "soundOff") == true{
             //                        backgroundMusicPlayer.play()
             //                        soundOff.isHidden = true
-            self.childNode(withName: "soundIMG")?.alpha = 0.5
+            self.childNode(withName: "soundIMG")?.alpha = 1
             Defaults?.set(false, forKey: "soundOff")
             Defaults?.synchronize()
         }else{
@@ -180,24 +198,24 @@ class menu: SKScene {
     func getHighScore(){
         if modeLabel.text == "Level Mode"{
             if Defaults?.integer(forKey: "HighLevel") != 0{
-                highLevel = Defaults?.integer(forKey: "HighLevel") as Int!
+                highLevel = (Defaults?.integer(forKey: "HighLevel") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }
             else{
                 Defaults?.set(1, forKey: "HighLevel")
-                highLevel = Defaults?.integer(forKey: "HighLevel") as Int!
+                highLevel = (Defaults?.integer(forKey: "HighLevel") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }
         }else if modeLabel.text == "Survival"{
             if Defaults?.integer(forKey: "SurvivalLevel") != 0{
-                highLevel = Defaults?.integer(forKey: "SurvivalLevel") as Int!
+                highLevel = (Defaults?.integer(forKey: "SurvivalLevel") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }else{
                 Defaults?.set(0, forKey: "SurvivalLevel")
-                highLevel = Defaults?.integer(forKey: "SurvivalLevel") as Int!
+                highLevel = (Defaults?.integer(forKey: "SurvivalLevel") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }
@@ -208,7 +226,7 @@ class menu: SKScene {
         for node in self.children {
             guard let snode = node as? SKSpriteNode else { continue }
             
-            if snode.position.y < 375 && snode.position.y > -375 {
+            if snode.position.y < 375 && snode.position.y > -375 && node.zPosition > -9 {
                 snode.run(SKAction.sequence([SKAction.moveBy(x: -1000, y: 0, duration: 0.3), SKAction.moveBy(x: 3000, y: 0, duration: 0)]), completion: {
                     snode.run(SKAction.moveBy(x: -2000, y: 0, duration: 0.3))
                     self.getHighScore()
@@ -232,7 +250,7 @@ class menu: SKScene {
         for node in self.children {
             guard let snode = node as? SKSpriteNode else { continue }
             
-            if snode.position.y < 375 && snode.position.y > -375 {
+            if snode.position.y < 375 && snode.position.y > -375 && node.zPosition > -9{
                 snode.run(SKAction.sequence([SKAction.moveBy(x: 1000, y: 0, duration: 0.3), SKAction.moveBy(x: -3000, y: 0, duration: 0)]), completion: {
                     snode.run(SKAction.moveBy(x: 2000, y: 0, duration: 0.3))
                     self.getHighScore()
@@ -254,14 +272,18 @@ class menu: SKScene {
     
     func emptyScreen(){
         //empty sprite nodes
+        moveLine(line: line1, duration: 0.5)
+        moveLine(line: line2, duration: 0.5)
+        moveLine(line: line3, duration: 0.5)
+        
         for node in self.children {
             guard let snode = node as? SKSpriteNode else { continue }
             
-            if snode.position.y > 375 {
+            if snode.position.y > 375 && node.zPosition > -9{
                 snode.run(SKAction.moveBy(x: 0, y: 800, duration: 0.3))
             }
             
-            if snode.position.y < -375 {
+            if snode.position.y < -375 && node.zPosition > -9{
                 snode.run(SKAction.moveBy(x: 0, y: -800, duration: 0.3))
             }
             
@@ -283,5 +305,21 @@ class menu: SKScene {
     func quickResize(nodeName: String, size: CGFloat, duration: Double){
         self.childNode(withName: nodeName)?.run(SKAction.resize(toWidth: size, height: size, duration: duration))
     }
+    
+    func moveLine(line: SKSpriteNode, duration: CGFloat){
+        line.run(SKAction.moveBy(x: -1650, y: -1650, duration: TimeInterval(duration)))
+    }
+   
+    
+    
+    
+    /**********************************************
+     *             CONFIGURING ADS                *
+     **********************************************/
+    
+    
+    
+    
+    
     
 }

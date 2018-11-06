@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import AVFoundation
+import GameKit
 
 class Survival: SKScene {
     var mainCamera = SKCameraNode()
@@ -43,13 +44,13 @@ class Survival: SKScene {
     var currentScore = Int()
     var highLevel = Int()
     //var currentColor = UIColor(red: CGFloat(1.0), green: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), blue: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), alpha: CGFloat(1))
-    let Defaults = UserDefaults.standard as UserDefaults!
+    let Defaults = UserDefaults.standard as UserDefaults?
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
     override func didMove(to view: SKView) {
         // print(scene?.backgroundColor)
         if Defaults?.integer(forKey: "SurvivalLevel") != 0{
-            highLevel = Defaults?.integer(forKey: "SurvivalLevel") as Int!
+            highLevel = (Defaults?.integer(forKey: "SurvivalLevel") as Int?)!
             currentLevel = highLevel
             currentScore = 0
             LevelLabel.text = "\(currentScore)"
@@ -83,7 +84,7 @@ class Survival: SKScene {
         
         shareButton.name = "shareButton"
         shareButton.size = CGSize(width: 125, height: 125)
-        shareButton.position = CGPoint(x: -386, y: -801)
+        shareButton.position = CGPoint(x: -386, y: -740)
         shareButton.alpha = 0.7
         self.addChild(shareButton)
         
@@ -197,7 +198,14 @@ class Survival: SKScene {
                     if nodeName == "homeButton"{
                         let gameScene = SKScene(fileNamed: "menu")
                         gameScene?.scaleMode = .aspectFit
-                        view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5)  )
+                        view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))
+                        return
+                    }else if nodeName == "leaderBoardButton" {
+                        NotificationCenter.default.post(name: NSNotification.Name("showLeaderBoard"), object: nil)
+                        return
+                    }else if nodeName == "shareButton" {
+                        shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
+                        return
                     }
                 }
             }
@@ -228,8 +236,8 @@ class Survival: SKScene {
                 let node : SKNode = self.atPoint(location)
                 if node.name == "LevelLabel" {
                     print("Hello")
-                    currentLevel = 1
-                    Defaults?.set(1, forKey: "HighLevel")
+                    //currentLevel = 1
+                    //Defaults?.set(1, forKey: "HighLevel")
                     
                 }
             }
@@ -281,7 +289,7 @@ class Survival: SKScene {
             speed = 20
         }
         
-        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(M_PI * 4), clockwise: true)
+        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
         let follow = SKAction.follow(Path.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
         Person.run(SKAction.repeatForever(follow).reversed())
         
@@ -300,7 +308,7 @@ class Survival: SKScene {
         }
         
         
-        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(M_PI * 4), clockwise: true)
+        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
         let follow = SKAction.follow(Path.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
         Person.run(SKAction.repeatForever(follow))
         
@@ -436,8 +444,8 @@ class Survival: SKScene {
         intersected = false
         gameStarted = false
         LevelLabel.removeFromParent()
-        currentScore = currentLevel
-        
+        currentScore = 0
+        submitScore(score: (Defaults?.integer(forKey: "SurvivalLevel"))!)
         if modeLabel.text == "Survival"{
             loadLevelMode()
             self.createChain()
@@ -490,6 +498,41 @@ class Survival: SKScene {
                     died()
                 }
             }
+        }
+    }
+    
+    func shareText(text: String) {
+        
+        let textToShare = [text]
+        let activityVC = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        
+        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            if  activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))  {
+                activityVC.popoverPresentationController?.sourceView = super.view
+                /* to adjust pop-up position */
+                //activityVC.popoverPresentationController?.sourceRect = CGRect(x: shareCircle.position.x,y: shareCircle.position.y, width: 0, height: 0)
+            }
+        }
+        let currentViewController:UIViewController=UIApplication.shared.keyWindow!.rootViewController!
+        
+        currentViewController.present(activityVC, animated: true, completion: nil)
+    }
+    
+    func submitScore(score: Int) {
+        if GKLocalPlayer.localPlayer().isAuthenticated == true{
+            let leaderboardID = "grp.survivalBoard"
+            let sScore = GKScore(leaderboardIdentifier: leaderboardID)
+            sScore.value = Int64(score)
+            
+            GKScore.report([sScore], withCompletionHandler: { (Error) in
+                if Error != nil {
+                    print(Error!.localizedDescription)
+                } else {
+                    print("Score submitted")
+                    
+                }
+            })
         }
     }
 }

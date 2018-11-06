@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import AVFoundation
+import GameKit
 
 class GameScene: SKScene {
     var mainCamera = SKCameraNode()
@@ -51,7 +52,14 @@ class GameScene: SKScene {
     let Defaults = UserDefaults.standard as UserDefaults!
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+    
     override func didMove(to view: SKView) {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.size = CGSize(width: 1433, height: 1912)
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showAdBanners"), object: nil)
+
+        
         /* START - Temp fix to format app for iPhone X */
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {
@@ -101,7 +109,7 @@ class GameScene: SKScene {
         
         shareButton.name = "shareButton"
         shareButton.size = CGSize(width: 125, height: 125)
-        shareButton.position = CGPoint(x: -386, y: -801)
+        shareButton.position = CGPoint(x: -386, y: -740)
         shareButton.alpha = 0.7
         self.addChild(shareButton)
         
@@ -211,10 +219,17 @@ class GameScene: SKScene {
             for touch: AnyObject in touches {
                 let location = (touch as! UITouch).location(in: self)
                 if let nodeName = self.atPoint(location).name {
-                    if nodeName == "homeButton"{
+                    if nodeName == "homeButton" {
                         let gameScene = SKScene(fileNamed: "menu")
                         gameScene?.scaleMode = .aspectFit
-                        view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5)  )
+                        view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))
+                        return
+                    }else if nodeName == "leaderBoardButton" {
+                        NotificationCenter.default.post(name: NSNotification.Name("showLeaderBoard"), object: nil)
+                        return
+                    }else if nodeName == "shareButton" {
+                        shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
+                        return
                     }
                 }
             }
@@ -222,19 +237,18 @@ class GameScene: SKScene {
                 moveClockWise()
                 movingClockwise = true
                 gameStarted = true
-            }
-            else if gameStarted == true{
+            } else if gameStarted == true{
                 
                 if movingClockwise == true{
                     if Dot.name != "doubleDot"{
-                     moveCounterClockWise()
+                        moveCounterClockWise()
                     }
                     movingClockwise = false
                     DotTouched()
                 }
                 else if movingClockwise == false{
                     if Dot.name != "doubleDot"{
-                     moveClockWise()
+                        moveClockWise()
                     }
                     movingClockwise = true
                     DotTouched()
@@ -247,8 +261,8 @@ class GameScene: SKScene {
                 let node : SKNode = self.atPoint(location)
                 if node.name == "LevelLabel" {
                     //        So I can test any level I want!!! Remove the next 2 lines in final product!!!
-                                    currentLevel = 60
-                                    Defaults?.set(60, forKey: "HighLevel")
+                    //currentLevel = 60
+                    //Defaults?.set(60, forKey: "HighLevel")
                     
                 }
             }
@@ -336,7 +350,7 @@ class GameScene: SKScene {
                 Dot.color = UIColor.orange
                 Dot.size = CGSize(width: 85, height: 85)
                 Dot.addChild(doubleLabel)
-
+                
             }
         }
         
@@ -430,7 +444,7 @@ class GameScene: SKScene {
             speed = 10
         }
         
-        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(M_PI * 4), clockwise: true)
+        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
         let follow = SKAction.follow(Path.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
         Person.run(SKAction.repeatForever(follow).reversed())
         
@@ -449,7 +463,7 @@ class GameScene: SKScene {
         }
         
         
-        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(M_PI * 4), clockwise: true)
+        Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
         let follow = SKAction.follow(Path.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
         Person.run(SKAction.repeatForever(follow))
         
@@ -470,7 +484,7 @@ class GameScene: SKScene {
                 }else{
                     died()
                 }
-           /*if the dot is a 2x dot it'll only change the color and image untill you tap again*/
+                /*if the dot is a 2x dot it'll only change the color and image untill you tap again*/
             }else if Dot.name == "doubleDot"{
                 doubleLabel.text = "x1"
                 Dot.color = UIColor(red: 0.0863, green: 0.8902, blue: 1, alpha: 1.0)
@@ -606,6 +620,7 @@ class GameScene: SKScene {
             highLevel = currentLevel
             let Defaults = UserDefaults.standard
             Defaults.set(highLevel, forKey: "HighLevel")
+            submitScore(score: Defaults.integer(forKey: "HighLevel"))
         }
         won()
         
@@ -628,6 +643,20 @@ class GameScene: SKScene {
             self.createChain()
         }
         shakeCamera(duration: 0.3)
+        if UserDefaults.standard.object(forKey: "attempts") != nil{
+            
+            UserDefaults.standard.setValue((UserDefaults.standard.integer(forKey: "attempts") + 1), forKeyPath: "attempts")
+            if UserDefaults.standard.integer(forKey: "attempts") >= 10{
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showInterstitial"), object: nil)
+                UserDefaults.standard.setValue(0, forKeyPath: "attempts")
+            }
+            }else{
+                UserDefaults.standard.setValue(0, forKeyPath: "attempts")
+            }
+            
+        
+        
+        
     }
     
     //FIXME: add cooler win animation
@@ -664,6 +693,7 @@ class GameScene: SKScene {
                 }
         })
         
+        
         //loadView()
         
         
@@ -687,5 +717,41 @@ class GameScene: SKScene {
                 }
             }
         }
+    }
+    
+    
+    func submitScore(score: Int) {
+        if GKLocalPlayer.localPlayer().isAuthenticated == true{
+            let leaderboardID = "grp.levelModeBoard"
+            let sScore = GKScore(leaderboardIdentifier: leaderboardID)
+            sScore.value = Int64(score)
+            
+            GKScore.report([sScore], withCompletionHandler: { (Error) in
+                if Error != nil {
+                    print(Error!.localizedDescription)
+                } else {
+                    print("Score submitted")
+                    
+                }
+            })
+        }
+    }
+    
+    func shareText(text: String) {
+        
+        let textToShare = [text]
+        let activityVC = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        
+        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            if  activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))  {
+                activityVC.popoverPresentationController?.sourceView = super.view
+                /* to adjust pop-up position */
+                //activityVC.popoverPresentationController?.sourceRect = CGRect(x: shareCircle.position.x,y: shareCircle.position.y, width: 0, height: 0)
+            }
+        }
+        let currentViewController:UIViewController=UIApplication.shared.keyWindow!.rootViewController!
+        
+        currentViewController.present(activityVC, animated: true, completion: nil)
     }
 }
