@@ -32,7 +32,8 @@ class menu: SKScene, GADBannerViewDelegate {
     var currentLevel = Int()
     var currentScore = Int()
     var highLevel = Int()
-    
+    var deviceHeightOffset = CGFloat()
+  
     let Defaults = UserDefaults.standard as UserDefaults?
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
@@ -45,14 +46,26 @@ class menu: SKScene, GADBannerViewDelegate {
         //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "loadInterstitial"), object: nil)
         /* START - Temp fix to format app for iPhone X */
         if UIDevice().userInterfaceIdiom == .phone {
-            switch UIScreen.main.nativeBounds.height {
-            case 2436:
-                print("iPhone X")
-                self.size = CGSize(width: 1125, height: 2436)
-            default:
-                print("unknown")
-            }
+          switch UIScreen.main.nativeBounds.height {
+          case 2436:
+            print("iPhone X, XS")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 175
+          case 2688:
+            print("iPhone XS Max")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 200
+          case 1792:
+            print("iPhone XR")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 175
+          default:
+            deviceHeightOffset = 0
+            print("Unknown")
+          }
         }
+      
+        emptyScreen(offset: deviceHeightOffset, duration: 0)
         /* END - Temp fix to format app for iPhone X */
         
         scoreLabel = self.childNode(withName: "highScoreLabel") as! SKLabelNode
@@ -101,13 +114,13 @@ class menu: SKScene, GADBannerViewDelegate {
                 }else if nodeName == "playButton"{
                     if modeLabel.text == "Level Mode"{
                         let gameScene = SKScene(fileNamed: "GameScene")
-                        gameScene?.scaleMode = .aspectFit
-                        emptyScreen()
+                        gameScene?.scaleMode = .aspectFill
+                        emptyScreen(offset: 800, duration: 0.3)
                         run(SKAction.wait(forDuration: 0.7), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
                     }else if modeLabel.text == "Survival" {
                         let gameScene = SKScene(fileNamed: "SurvivalMode")
-                        gameScene?.scaleMode = .aspectFit
-                        emptyScreen()
+                        gameScene?.scaleMode = .aspectFill
+                        emptyScreen(offset: 800, duration: 0.3)
                         run(SKAction.wait(forDuration: 0.7), completion: { self.view?.presentScene(gameScene!, transition: SKTransition.push(with: .left, duration: 0.5))})
                     }
                     print("play")
@@ -270,7 +283,7 @@ class menu: SKScene, GADBannerViewDelegate {
         }
     }
     
-    func emptyScreen(){
+  func emptyScreen(offset: CGFloat, duration: Double){
         //empty sprite nodes
         moveLine(line: line1, duration: 0.5)
         moveLine(line: line2, duration: 0.5)
@@ -280,11 +293,11 @@ class menu: SKScene, GADBannerViewDelegate {
             guard let snode = node as? SKSpriteNode else { continue }
             
             if snode.position.y > 375 && node.zPosition > -9{
-                snode.run(SKAction.moveBy(x: 0, y: 800, duration: 0.3))
+                snode.run(SKAction.moveBy(x: 0, y: offset, duration: duration))
             }
             
             if snode.position.y < -375 && node.zPosition > -9{
-                snode.run(SKAction.moveBy(x: 0, y: -800, duration: 0.3))
+                snode.run(SKAction.moveBy(x: 0, y: -(offset), duration: duration))
             }
             
         }
@@ -293,11 +306,11 @@ class menu: SKScene, GADBannerViewDelegate {
             guard let snode = node as? SKLabelNode else { continue }
             
             if snode.position.y > 375 {
-                snode.run(SKAction.moveBy(x: 0, y: 800, duration: 0.3))
+                snode.run(SKAction.moveBy(x: 0, y: offset, duration: duration))
             }
             
             if snode.position.y < -375 {
-                snode.run(SKAction.moveBy(x: 0, y: -800, duration: 0.3))
+                snode.run(SKAction.moveBy(x: 0, y: -(offset), duration: duration))
             }
         }
     }

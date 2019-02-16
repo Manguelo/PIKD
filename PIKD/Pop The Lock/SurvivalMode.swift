@@ -43,11 +43,36 @@ class Survival: SKScene {
     var currentLevel = Int()
     var currentScore = Int()
     var highLevel = Int()
+    var deviceHeightOffset = CGFloat()
     //var currentColor = UIColor(red: CGFloat(1.0), green: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), blue: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), alpha: CGFloat(1))
     let Defaults = UserDefaults.standard as UserDefaults?
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
     override func didMove(to view: SKView) {
+      
+        /* START - Temp fix to format app for iPhone X */
+        if UIDevice().userInterfaceIdiom == .phone {
+          switch UIScreen.main.nativeBounds.height {
+          case 2436:
+            print("iPhone X, XS")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 175
+          case 2688:
+            print("iPhone XS Max")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 200
+          case 1792:
+            print("iPhone XR")
+            self.size = CGSize(width: 1125, height: 2436)
+            deviceHeightOffset = 175
+          default:
+            deviceHeightOffset = 0
+            print("Unknown")
+          }
+        }
+      
+        /* END - Temp fix to format app for iPhone X */
+      
         // print(scene?.backgroundColor)
         if Defaults?.integer(forKey: "SurvivalLevel") != 0{
             highLevel = (Defaults?.integer(forKey: "SurvivalLevel") as Int?)!
@@ -78,19 +103,19 @@ class Survival: SKScene {
         
         homeButton.name = "homeButton"
         homeButton.size = CGSize(width: 175, height: 175)
-        homeButton.position = CGPoint(x: -386, y: 801)
+        homeButton.position = CGPoint(x: -386, y: 801 + deviceHeightOffset)
         homeButton.alpha = 1
         self.addChild(homeButton)
         
         shareButton.name = "shareButton"
         shareButton.size = CGSize(width: 125, height: 125)
-        shareButton.position = CGPoint(x: -386, y: -740)
+        shareButton.position = CGPoint(x: -386, y: -740 - deviceHeightOffset)
         shareButton.alpha = 0.7
         self.addChild(shareButton)
         
         leaderButton.name = "leaderBoardButton"
         leaderButton.size = CGSize(width: 175, height: 175)
-        leaderButton.position = CGPoint(x: 386, y: 801)
+        leaderButton.position = CGPoint(x: 386, y: 801 + deviceHeightOffset)
         leaderButton.alpha = 0.7
         self.addChild(leaderButton)
         
@@ -124,7 +149,7 @@ class Survival: SKScene {
         
         
         
-        LevelLabel2.position = CGPoint(x: 0 , y: self.frame.height / 2 - 450)
+        LevelLabel2.position = CGPoint(x: 0 , y: self.frame.height / 2 - 450 - deviceHeightOffset)
         LevelLabel2.text = "SURVIVAL"
         LevelLabel2.fontName = "Futura-Bold"
         LevelLabel2.fontColor = UIColor.white
@@ -132,7 +157,7 @@ class Survival: SKScene {
         LevelLabel2.name = "LevelLabel"
         self.addChild(self.LevelLabel2)
         
-        LevelLabel3.position = CGPoint(x: 0 , y: self.frame.height / 2 - 535)
+        LevelLabel3.position = CGPoint(x: 0 , y: self.frame.height / 2 - 535 - deviceHeightOffset)
         LevelLabel3.text = "\(highLevel)"
         LevelLabel3.fontName = "Futura-Bold"
         LevelLabel3.fontColor = UIColor.white
