@@ -44,7 +44,7 @@ class GameScene: SKScene {
     var LevelLabel3 = SKLabelNode()
     let doubleLabel = SKLabelNode()
     
-    
+    var attemptsTillAd = 10;
     var currentLevel = Int()
     var currentScore = Int()
     var highLevel = Int()
@@ -364,20 +364,76 @@ class GameScene: SKScene {
                 Dot.addChild(doubleLabel)
                 
             }
+        }else if currentLevel >= 70 && currentLevel < 80{
+            //case already covered below
+        }else if currentLevel >= 80 && currentLevel < 90{
+            switch(unsafeRandomIntFrom(start: 1, to: 3)){
+            case 1:
+                Dot.size = CGSize(width: 50, height: 50)
+            case 2:
+                doubleLabel.fontName = "Futura-Bold"
+                doubleLabel.text = "x2"
+                doubleLabel.fontSize = 45
+                doubleLabel.zPosition = 1.5
+                doubleLabel.position.y = Dot.position.y - 15
+                
+                Dot.name = "doubleDot"
+                Dot.color = UIColor.orange
+                Dot.size = CGSize(width: 85, height: 85)
+                Dot.addChild(doubleLabel)
+            case 3:
+                Dot.size = CGSize(width: 60, height: 60)
+            default:
+                break
+            }
+            
+            attemptsTillAd = 15;
+        }else if currentLevel >= 90 && currentLevel < 99{
+            switch(unsafeRandomIntFrom(start: 1, to: 3)){
+            case 1:
+                let action1 = SKAction.colorize(with: UIColor.green, colorBlendFactor: 0.8, duration: 0.2)
+                let action2 = SKAction.colorize(with: currentColor, colorBlendFactor: 1.0, duration: 0.5)
+                Dot.run(SKAction.repeatForever(SKAction.sequence([action1,action2, SKAction.wait(forDuration: 1.5)])))
+                AddBadDot()
+            case 2:
+                doubleLabel.fontName = "Futura-Bold"
+                doubleLabel.text = "x2"
+                doubleLabel.fontSize = 45
+                doubleLabel.zPosition = 1.5
+                doubleLabel.position.y = Dot.position.y - 15
+                
+                Dot.name = "doubleDot"
+                Dot.color = UIColor.orange
+                Dot.size = CGSize(width: 85, height: 85)
+                Dot.addChild(doubleLabel)
+            case 3:
+                Dot.run(SKAction.repeatForever(SKAction.sequence([SKAction.fadeOut(withDuration: 0.5), SKAction.wait(forDuration: 1.0), SKAction.fadeIn(withDuration: 1.0)])) )
+            default:
+                break
+            }
         }
-        
+
         if movingClockwise == true{
             let tempAngle = CGFloat.random(min: rad - 1.0, max: rad - 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
-            
+            if gameStarted == true && Dot.name != "doubleDot"{
+                if currentLevel >= 70 && currentLevel < 90{
+                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
+                    Dot.run(SKAction.repeatForever(follow))
+                }
+            }
         }
         else if movingClockwise == false{
             let tempAngle = CGFloat.random(min: rad + 1.0, max: rad + 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
-            
-            
+            if gameStarted == true && Dot.name != "doubleDot"{
+                if currentLevel >= 70 && currentLevel < 90{
+                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + speed * 25))
+                    Dot.run(SKAction.repeatForever(follow).reversed())
+                }
+            }
         }
         self.addChild(Dot)
         print(Dot.position)
@@ -423,20 +479,21 @@ class GameScene: SKScene {
             let action1 = SKAction.colorize(with: UIColor.red, colorBlendFactor: 0.8, duration: 0.1)
             let action2 = SKAction.colorize(with: currentColor, colorBlendFactor: 1.0, duration: 0.1)
             badDot.run(SKAction.repeatForever(SKAction.sequence([action1,action2, SKAction.wait(forDuration: 1.5)])))
+        }else if currentLevel >= 80 && currentLevel < 99{
+            let action1 = SKAction.colorize(with: UIColor.red, colorBlendFactor: 0.8, duration: 0.1)
+            let action2 = SKAction.colorize(with: currentColor, colorBlendFactor: 1.0, duration: 0.1)
+            badDot.run(SKAction.repeatForever(SKAction.sequence([action1,action2, SKAction.fadeOut(withDuration: 0.5), SKAction.wait(forDuration: 1.0), fadeIn])))
         }
         
         if movingClockwise == true{
             let tempAngle = CGFloat.random(min: rad - 1.0, max: rad - 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
-            
         }
         else if movingClockwise == false{
             let tempAngle = CGFloat.random(min: rad + 1.0, max: rad + 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
-            
-            
         }
         self.addChild(badDot)
         print(Dot.position)
@@ -452,8 +509,13 @@ class GameScene: SKScene {
         var speed = currentLevel
         let rad = atan2(dy, dx)
         
-        if currentLevel > 20 {
-            speed = 10
+        if currentLevel >= 60 && currentLevel < 70 ||
+           currentLevel >= 80 && currentLevel < 99{
+            speed = 15
+        }else if currentLevel >= 70 && currentLevel < 80{
+            speed = 15
+        }else if currentLevel > 20 {
+            speed = 20
         }
         
         Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
@@ -470,8 +532,13 @@ class GameScene: SKScene {
         let rad = atan2(dy, dx)
         
         
-        if currentLevel > 20 {
-            speed = 10
+        if currentLevel >= 60 && currentLevel < 70 ||
+           currentLevel >= 80 && currentLevel < 99{
+            speed = 15
+        }else if currentLevel >= 70 && currentLevel < 80{
+            speed = 15
+        }else if currentLevel > 20 {
+            speed = 20
         }
         
         
@@ -658,7 +725,7 @@ class GameScene: SKScene {
         if UserDefaults.standard.object(forKey: "attempts") != nil{
             
             UserDefaults.standard.setValue((UserDefaults.standard.integer(forKey: "attempts") + 1), forKeyPath: "attempts")
-            if UserDefaults.standard.integer(forKey: "attempts") >= 10{
+            if UserDefaults.standard.integer(forKey: "attempts") >= attemptsTillAd{
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showInterstitial"), object: nil)
                 UserDefaults.standard.setValue(0, forKeyPath: "attempts")
             }
