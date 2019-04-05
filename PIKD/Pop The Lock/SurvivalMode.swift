@@ -531,7 +531,7 @@ class Survival: SKScene {
         let textToShare = [text]
         let activityVC = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
         
-        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+      activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
         if UIDevice.current.userInterfaceIdiom == .pad {
             if  activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))  {
                 activityVC.popoverPresentationController?.sourceView = super.view
@@ -545,7 +545,7 @@ class Survival: SKScene {
     }
     
     func submitScore(score: Int) {
-        if GKLocalPlayer.localPlayer().isAuthenticated == true{
+      if GKLocalPlayer.local.isAuthenticated == true{
             let leaderboardID = "grp.survivalBoard"
             let sScore = GKScore(leaderboardIdentifier: leaderboardID)
             sScore.value = Int64(score)

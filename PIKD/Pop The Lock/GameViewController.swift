@@ -69,12 +69,12 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
     /*************************************************************
      *                  CONFIGURING BANNER ADS                   *
      *************************************************************/
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         GADMobileAds.configure(withApplicationID: "ca-app-pub-3465645126290249~4271388904")
         return true
     }
     
-    func initAdMobBanner() {
+  @objc func initAdMobBanner() {
 
         adMobBannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
         adMobBannerView.frame = CGRect(x:0.0, y:self.view.frame.size.height - adMobBannerView.frame.size.height, width:adMobBannerView.frame.size.width, height:adMobBannerView.frame.size.height)
@@ -95,7 +95,7 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
     /*************************************************************
      *              CONFIGURING INTERSTITIAL ADS                 *
      *************************************************************/
-    func createAndLoadInterstitial() -> GADInterstitial? {
+  @objc func createAndLoadInterstitial() -> GADInterstitial? {
         interstitial = GADInterstitial(adUnitID: "ca-app-pub-3465645126290249/6372197810")
         
         guard let interstitial = interstitial else {
@@ -112,7 +112,7 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
         return interstitial
     }
     
-    func presentInterstitial() {
+  @objc func presentInterstitial() {
         interstitial?.present(fromRootViewController: self)
         interstitial = createAndLoadInterstitial()
     }
@@ -133,7 +133,7 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
      *                  CONFIGURING GAME CENTER                  *
      *************************************************************/
     
-    func showLeaderboard() {
+  @objc func showLeaderboard() {
         
         let gcViewController: GKGameCenterViewController = GKGameCenterViewController()
         gcViewController.gameCenterDelegate = self
@@ -153,7 +153,7 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
     
     
     func authenticateLocalPlayer() {
-        let localPlayer: GKLocalPlayer = GKLocalPlayer.localPlayer()
+      let localPlayer: GKLocalPlayer = GKLocalPlayer.local
         
         localPlayer.authenticateHandler = {(ViewController, error) -> Void in
             if((ViewController) != nil) {

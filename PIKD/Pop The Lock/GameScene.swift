@@ -50,7 +50,7 @@ class GameScene: SKScene {
     var highLevel = Int()
     var deviceHeightOffset = CGFloat()
     //var currentColor = UIColor(red: CGFloat(1.0), green: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), blue: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), alpha: CGFloat(1))
-    let Defaults = UserDefaults.standard as UserDefaults!
+  let Defaults = UserDefaults.standard as UserDefaults?
     let fadeIn = SKAction.fadeIn(withDuration: 1.5)
     let fadeOut = SKAction.fadeOut(withDuration: 0.5)
     
@@ -86,7 +86,7 @@ class GameScene: SKScene {
         
         // print(scene?.backgroundColor)
         if Defaults?.integer(forKey: "HighLevel") != 0{
-            highLevel = Defaults?.integer(forKey: "HighLevel") as Int!
+            highLevel = Defaults?.integer(forKey: "HighLevel") as! Int
             Defaults?.set(highLevel, forKey: "HighLevel")
             currentLevel = highLevel
             currentScore = currentLevel
@@ -511,7 +511,7 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            speed = 15
+            speed = 16
         }else if currentLevel >= 70 && currentLevel < 80{
             speed = 15
         }else if currentLevel > 20 {
@@ -534,7 +534,7 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            speed = 15
+            speed = 16
         }else if currentLevel >= 70 && currentLevel < 80{
             speed = 15
         }else if currentLevel > 20 {
@@ -800,7 +800,7 @@ class GameScene: SKScene {
     
     
     func submitScore(score: Int) {
-        if GKLocalPlayer.localPlayer().isAuthenticated == true{
+      if GKLocalPlayer.local.isAuthenticated == true{
             let leaderboardID = "grp.levelModeBoard"
             let sScore = GKScore(leaderboardIdentifier: leaderboardID)
             sScore.value = Int64(score)
@@ -821,7 +821,7 @@ class GameScene: SKScene {
         let textToShare = [text]
         let activityVC = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
         
-        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+      activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
         if UIDevice.current.userInterfaceIdiom == .pad {
             if  activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))  {
                 activityVC.popoverPresentationController?.sourceView = super.view

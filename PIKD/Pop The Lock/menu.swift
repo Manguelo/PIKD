@@ -195,7 +195,7 @@ class menu: SKScene, GADBannerViewDelegate {
         let textToShare = [text]
         let activityVC = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
         
-        activityVC.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.addToReadingList]
+      activityVC.excludedActivityTypes = [UIActivity.ActivityType.airDrop, UIActivity.ActivityType.addToReadingList]
         if UIDevice.current.userInterfaceIdiom == .pad {
             if  activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))  {
                 activityVC.popoverPresentationController?.sourceView = super.view
