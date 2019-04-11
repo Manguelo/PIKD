@@ -13,8 +13,7 @@ import GoogleMobileAds
 
 var modeLabel = SKLabelNode()
 var randomHue =  CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-var currentColor = UIColor(hue: randomHue, saturation: 0.34, brightness: 0.8, alpha: 1)
-
+var currentColor = UIColor(hue: randomHue, saturation: 0.44, brightness: 0.8, alpha: 1)
 
 class menu: SKScene, GADBannerViewDelegate {
     var mainCamera = SKCameraNode()
@@ -210,14 +209,14 @@ class menu: SKScene, GADBannerViewDelegate {
     
     func getHighScore(){
         if modeLabel.text == "Level Mode"{
-            if Defaults?.integer(forKey: "HighLevel") != 0{
-                highLevel = (Defaults?.integer(forKey: "HighLevel") as Int?)!
+            if Defaults?.integer(forKey: "HighLevelR") != 0{
+                highLevel = (Defaults?.integer(forKey: "HighLevelR") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }
             else{
-                Defaults?.set(1, forKey: "HighLevel")
-                highLevel = (Defaults?.integer(forKey: "HighLevel") as Int?)!
+                Defaults?.set(1, forKey: "HighLevelR")
+                highLevel = (Defaults?.integer(forKey: "HighLevelR") as Int?)!
                 currentLevel = highLevel
                 scoreLabel.text = "\(highLevel)"
             }

@@ -24,33 +24,20 @@ extension menu {
         var line2Hue = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
         var line3Hue = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
         
-        var defaultLineColor = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-        //while finish != true {
-            //if defaultLineColor <= 0.80 || defaultLineColor >= 0.20{
-                line1Hue = defaultLineColor
-                line2Hue = CGFloat(defaultLineColor + 0.2)
-                line3Hue = CGFloat(defaultLineColor - 0.2)
-                finish = true
-           // }else{
-             //   defaultLineColor = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+        //var defaultLineColor = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+      
+        line1Hue = randomHue + 0.11
+        line2Hue = CGFloat(randomHue + 0.05)
+        line3Hue = CGFloat(randomHue - 0.1)
+        finish = true
+      
+        print(randomHue)
+        print(randomHue)
+        print(randomHue)
             
-            //            if abs(CGFloat(line1Hue).distance(to: line3Hue)) <= 0.1 && abs(CGFloat(line1Hue).distance(to: line3Hue)) >= 2{
-            //                line1Hue = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-            //            }
-            //            if abs(CGFloat(line2Hue).distance(to: line3Hue)) <= 0.1 && abs(CGFloat(line2Hue).distance(to: line3Hue)) >= 2{
-            //                line3Hue = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-            //            }
-           // }
-            print(line1Hue)
-            print(line2Hue)
-            print(line3Hue)
-       // }
-            
-            
-            
-        line1.color = UIColor(hue: defaultLineColor, saturation: 0.34, brightness: 0.8, alpha: 1)
-        line2.color = UIColor(hue: line2Hue, saturation: 0.34, brightness: 0.8, alpha: 1)
-        line3.color = UIColor(hue: line3Hue, saturation: 0.34, brightness: 0.8, alpha: 1)
+        line1.color = UIColor(hue: line1Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
+        line2.color = UIColor(hue: line2Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
+        line3.color = UIColor(hue: line3Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
 
         
         print(CGFloat(line1Hue).distance(to: line2Hue))

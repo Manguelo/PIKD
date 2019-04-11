@@ -9,13 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pop The Lock/menu.swift"
-            timestampString = "576119952.542153"
+            filePath = "Pop The Lock/GameScene.swift"
+            timestampString = "576710361.411688"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "didMove(to:)"
+            startingLineNumber = "434"
+            endingLineNumber = "434"
+            landmarkName = "AddDot()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
