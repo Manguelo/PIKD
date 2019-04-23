@@ -33,7 +33,7 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "PIKD_FINAL 120.png",
+      "filename" : "PIKD_FINAL_120.png",
       "scale" : "2x"
     },
     {
@@ -74,25 +74,25 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "PIKD_FINAL 76.png",
+      "filename" : "PIKD_FINAL_76.png",
       "scale" : "1x"
     },
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "PIKD_FINAL 152.png",
+      "filename" : "PIKD_FINAL_152.png",
       "scale" : "2x"
     },
     {
       "size" : "83.5x83.5",
       "idiom" : "ipad",
-      "filename" : "PIKD_FINAL 167.png",
+      "filename" : "PIKD_FINAL_167.png",
       "scale" : "2x"
     },
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "PIKD_FINAL 1024.png",
+      "filename" : "PIKD_FINAL_1024.png",
       "scale" : "1x"
     }
   ],

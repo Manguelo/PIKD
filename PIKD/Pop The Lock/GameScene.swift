@@ -105,6 +105,7 @@ class GameScene: SKScene {
             run(SKAction.wait(forDuration: 0.4), completion: {
                 self.createChain()
                 self.addChild(self.lockEmitter!)
+                self.chainSound()
                 AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
                 self.run(SKAction.wait(forDuration: 0.7))
             })
@@ -194,9 +195,7 @@ class GameScene: SKScene {
         
         run(SKAction.wait(forDuration: 0.5))
         Person.run(SKAction.fadeIn(withDuration: 0.5), completion: { self.coolDown = false})
-        
-        
-        
+      
         mainCamera.position = CGPoint(x: 0, y: 0)
         self.camera = mainCamera
         self.addChild(mainCamera)
@@ -238,7 +237,7 @@ class GameScene: SKScene {
                         NotificationCenter.default.post(name: NSNotification.Name("showLeaderBoard"), object: nil)
                         return
                     }else if nodeName == "shareButton" {
-                        shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
+                        shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/id1412461576")
                         return
                     }
                 }
@@ -297,8 +296,8 @@ class GameScene: SKScene {
         if currentLevel >= 5 && currentLevel < 10{
             Dot.run(SKAction.repeatForever(SKAction.sequence([SKAction.fadeOut(withDuration: 0.5), SKAction.wait(forDuration: 1.0), SKAction.fadeIn(withDuration: 1.0)])) )
         }else if currentLevel >= 10 && currentLevel < 20{
-          let action1 = SKAction.colorize(with: UIColor.green, colorBlendFactor: 0.8, duration: 0.1)
-          let action2 = SKAction.colorize(with: currentColor, colorBlendFactor: 1.0, duration: 0.1)
+          let action1 = SKAction.colorize(with: UIColor.green, colorBlendFactor: 0.8, duration: 0.2)
+          let action2 = SKAction.colorize(with: currentColor, colorBlendFactor: 1.0, duration: 0.5)
             Dot.run(SKAction.repeatForever(SKAction.sequence([action1,action2, SKAction.wait(forDuration: 1.5)])))
             AddBadDot()
         }else if currentLevel >= 20 && currentLevel < 30{
@@ -454,7 +453,7 @@ class GameScene: SKScene {
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
             if gameStarted == true && Dot.name != "doubleDot"{
-                if currentLevel >= 70 && currentLevel < 90{
+                if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
                     let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
                     Dot.run(SKAction.repeatForever(follow))
                 }
@@ -465,7 +464,7 @@ class GameScene: SKScene {
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
             if gameStarted == true && Dot.name != "doubleDot"{
-                if currentLevel >= 70 && currentLevel < 90{
+                if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
                     let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
                     Dot.run(SKAction.repeatForever(follow).reversed())
                 }
@@ -525,11 +524,23 @@ class GameScene: SKScene {
             let tempAngle = CGFloat.random(min: rad - 1.0, max: rad - 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
+          if gameStarted == true && Dot.name != "doubleDot"{
+            if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
+              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+              badDot.run(SKAction.repeatForever(follow))
+            }
+          }
         }
         else if movingClockwise == false{
             let tempAngle = CGFloat.random(min: rad + 1.0, max: rad + 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
+          if gameStarted == true && Dot.name != "doubleDot"{
+            if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
+              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+              badDot.run(SKAction.repeatForever(follow).reversed())
+            }
+          }
         }
         self.addChild(badDot)
         print(Dot.position)
@@ -642,7 +653,7 @@ class GameScene: SKScene {
             
             died()
         }
-        
+        self.popSound()
     }
     
     func createChain(){
@@ -802,6 +813,7 @@ class GameScene: SKScene {
                         self.createChain()
                         self.lockEmitter?.resetSimulation()
                         self.addChild(self.lockEmitter!)
+                        self.chainSound()
                         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
                         self.run(SKAction.wait(forDuration: 0.7))
                     })
@@ -869,4 +881,16 @@ class GameScene: SKScene {
         
         currentViewController.present(activityVC, animated: true, completion: nil)
     }
+  
+  func chainSound(){
+    if Defaults?.bool(forKey: "soundOff") == false{
+      self.run(SKAction.playSoundFileNamed("chain_clank", waitForCompletion: true))
+    }
+  }
+  
+  func popSound(){
+    if Defaults?.bool(forKey: "soundOff") == false{
+      self.run(SKAction.playSoundFileNamed("Pop 9", waitForCompletion: true))
+    }
+  }
 }

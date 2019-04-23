@@ -82,7 +82,7 @@ class menu: SKScene, GADBannerViewDelegate {
         getHighScore()
         
         self.backgroundColor = currentColor
-        
+        setupSoundButton()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -136,7 +136,7 @@ class menu: SKScene, GADBannerViewDelegate {
                     print("sound")
                 }else if nodeName == "shareButton"{
                     //quickResize(nodeName: nodeName, size: 75, duration: 0.1)
-                    shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
+                  shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/id1412461576")
                     print("share")
                 }else if nodeName == "leaderBoardButton"{
                     //quickResize(nodeName: nodeName, size: 75, duration: 0.1)
@@ -153,15 +153,10 @@ class menu: SKScene, GADBannerViewDelegate {
     }
     func soundButtonPressed(){
         if Defaults?.bool(forKey: "soundOff") == false{
-            //backgroundMusicPlayer.pause()
             self.childNode(withName: "soundIMG")?.alpha = 0.5
-            //                        soundOff.isHidden = false
-            //                        soundOff.alpha = 1
             Defaults?.set(true, forKey: "soundOff")
             Defaults?.synchronize()
         }else if Defaults?.bool(forKey: "soundOff") == true{
-            //                        backgroundMusicPlayer.play()
-            //                        soundOff.isHidden = true
             self.childNode(withName: "soundIMG")?.alpha = 1
             Defaults?.set(false, forKey: "soundOff")
             Defaults?.synchronize()
@@ -169,8 +164,16 @@ class menu: SKScene, GADBannerViewDelegate {
             Defaults?.set(false, forKey: "soundOff")
             Defaults?.synchronize()
         }
-        
     }
+  
+  func setupSoundButton()
+  {
+      if Defaults?.bool(forKey: "soundOff") == true{
+        self.childNode(withName: "soundIMG")?.alpha = 0.5
+      }else if Defaults?.bool(forKey: "soundOff") == false{
+        self.childNode(withName: "soundIMG")?.alpha = 1
+      }
+  }
     
     func rateApp(appId: String, completion: @escaping ((_ success: Bool)->())) {
         if #available(iOS 10.3, *){
@@ -284,9 +287,9 @@ class menu: SKScene, GADBannerViewDelegate {
     
   func emptyScreen(offset: CGFloat, duration: Double){
         //empty sprite nodes
-        moveLine(line: line1, duration: 0.5)
-        moveLine(line: line2, duration: 0.5)
-        moveLine(line: line3, duration: 0.5)
+        moveLine(line: line1, duration: 0.5, initial: false)
+        moveLine(line: line2, duration: 0.5, initial: false)
+        moveLine(line: line3, duration: 0.5, initial: false)
         
         for node in self.children {
             guard let snode = node as? SKSpriteNode else { continue }
@@ -318,8 +321,11 @@ class menu: SKScene, GADBannerViewDelegate {
         self.childNode(withName: nodeName)?.run(SKAction.resize(toWidth: size, height: size, duration: duration))
     }
     
-    func moveLine(line: SKSpriteNode, duration: CGFloat){
-        line.run(SKAction.moveBy(x: -1650, y: -1650, duration: TimeInterval(duration)))
+  func moveLine(line: SKSpriteNode, duration: CGFloat, initial: Bool = true){
+    if initial {
+      line.run(SKAction.moveBy(x: -1650, y: -1650, duration: TimeInterval(duration)))}
+    else {
+      line.run(SKAction.moveBy(x: -2650, y: -2650, duration: TimeInterval(duration)))}
     }
    
     

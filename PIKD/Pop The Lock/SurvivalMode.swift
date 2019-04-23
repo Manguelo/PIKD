@@ -200,7 +200,7 @@ class Survival: SKScene {
         let amplitudeY:Float = 50;
         let numberOfShakes = duration / 0.04;
         var actionsArray:[SKAction] = [];
-        for index in 1...Int(numberOfShakes) {
+        for _ in 1...Int(numberOfShakes) {
             // build a new random shake and add it to the list
             let moveX = Float(arc4random_uniform(UInt32(amplitudeX))) - amplitudeX / 2;
             let moveY = Float(arc4random_uniform(UInt32(amplitudeY))) - amplitudeY / 2;
@@ -229,7 +229,7 @@ class Survival: SKScene {
                         NotificationCenter.default.post(name: NSNotification.Name("showLeaderBoard"), object: nil)
                         return
                     }else if nodeName == "shareButton" {
-                        shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/split-game/id1245368459?ls=1&mt=8")
+                      shareText(text: "Check out PIKD!!! https://itunes.apple.com/us/app/id1412461576")
                         return
                     }
                 }

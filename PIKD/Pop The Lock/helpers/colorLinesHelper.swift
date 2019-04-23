@@ -14,8 +14,7 @@ extension menu {
     
 
     func setupLines(){
-        var finish = false
-        
+      
         line1 = self.childNode(withName: "line1") as! SKSpriteNode
         line2 = self.childNode(withName: "line2") as! SKSpriteNode
         line3 = self.childNode(withName: "line3") as! SKSpriteNode
@@ -26,18 +25,17 @@ extension menu {
         
         //var defaultLineColor = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
       
-        line1Hue = randomHue + 0.11
-        line2Hue = CGFloat(randomHue + 0.05)
-        line3Hue = CGFloat(randomHue - 0.1)
-        finish = true
+        line1Hue = randomHue + 0.09
+        line2Hue = CGFloat(randomHue)
+        line3Hue = CGFloat(randomHue - 0.09)
       
         print(randomHue)
         print(randomHue)
         print(randomHue)
             
-        line1.color = UIColor(hue: line1Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
-        line2.color = UIColor(hue: line2Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
-        line3.color = UIColor(hue: line3Hue, saturation: 0.44, brightness: 0.75, alpha: 1)
+        line1.color = UIColor(hue: line1Hue, saturation: 0.72, brightness: 0.75, alpha: 1)
+        line2.color = UIColor(hue: line2Hue, saturation: 0.72, brightness: 0.75, alpha: 1)
+        line3.color = UIColor(hue: line3Hue, saturation: 0.72, brightness: 0.75, alpha: 1)
 
         
         print(CGFloat(line1Hue).distance(to: line2Hue))
