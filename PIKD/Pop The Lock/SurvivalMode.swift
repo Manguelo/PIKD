@@ -43,6 +43,7 @@ class Survival: SKScene {
     var currentLevel = Int()
     var currentScore = Int()
     var highLevel = Int()
+    var tillColorChange = Int();
     var deviceHeightOffset = CGFloat()
     //var currentColor = UIColor(red: CGFloat(1.0), green: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), blue: CGFloat(Float(arc4random()) / Float(UINT32_MAX)), alpha: CGFloat(1))
     let Defaults = UserDefaults.standard as UserDefaults?
@@ -100,7 +101,8 @@ class Survival: SKScene {
     }
     func loadLevelMode(){
         coolDown = true
-        
+        tillColorChange = 0;
+      
         homeButton.name = "homeButton"
         homeButton.size = CGSize(width: 175, height: 175)
         homeButton.position = CGPoint(x: -386, y: 801 + deviceHeightOffset)
@@ -310,8 +312,12 @@ class Survival: SKScene {
         var speed = currentScore
         let rad = atan2(dy, dx)
         
-        if currentScore > 20 {
-            speed = 20
+        if currentScore < 10
+        {
+          speed += 10 - currentScore
+        }
+        else if currentScore > 20 {
+          speed = 20
         }
         
         Path = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: rad, endAngle: rad + CGFloat(Double.pi * 4), clockwise: true)
@@ -326,10 +332,13 @@ class Survival: SKScene {
         let dy = Person.position.y - self.frame.midY
         var speed = currentScore
         let rad = atan2(dy, dx)
-        
-        
-        if currentScore > 20 {
-            speed = 20
+      
+        if currentScore < 10
+        {
+          speed += 10 - currentScore
+        }
+        else if currentScore > 20 {
+              speed = 20
         }
         
         
@@ -361,6 +370,17 @@ class Survival: SKScene {
             }
             intersected = false
             
+          if tillColorChange == 10
+          {
+            randomHue =  CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+            currentColor = UIColor(hue: randomHue, saturation: 0.34, brightness: 0.8, alpha: 1.0)
+            backgroundColor = currentColor
+            tillColorChange = 0
+          }
+          else
+          {
+            tillColorChange += 1
+          }
             currentScore += 1
             LevelLabel.text = "\(currentScore)"
 //            if currentScore <= 0{

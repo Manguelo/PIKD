@@ -308,7 +308,7 @@
 				TargetAttributes = {
 					346285D71E96EDA700D81818 = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = QXZFPGU5F4;
+						DevelopmentTeam = AJSYSVBK9E;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.GameCenter.iOS = {
@@ -568,7 +568,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = QXZFPGU5F4;
+				DEVELOPMENT_TEAM = AJSYSVBK9E;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -586,7 +586,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = QXZFPGU5F4;
+				DEVELOPMENT_TEAM = AJSYSVBK9E;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

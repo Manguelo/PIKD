@@ -169,7 +169,7 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
                     }
                     } as? (String?, Error?) -> Void)
                 
-                
+              self.getLeaderBoards(localPlayer: localPlayer)
             } else {
                 gcEnabled = false
                 print("Local player could not be authenticated, disabling game center")
@@ -177,8 +177,33 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
             }
             
         }
-        
     }
+  
+  func getLeaderBoards(localPlayer: GKLocalPlayer)
+  {
+      let Defaults = UserDefaults.standard as UserDefaults?
+
+      let leaderboard = GKLeaderboard(players: [localPlayer])
+      leaderboard.identifier = "grp.survivalBoard"
+      leaderboard.timeScope = .allTime
+      leaderboard.loadScores(completionHandler: {
+        (scores, error) in
+        if ((Defaults?.integer(forKey: "SurvivalLevel"))! < Int(exactly: (scores?.first?.value)!)!)
+        {
+          Defaults?.set(scores?.first?.value, forKey: "SurvivalLevel")
+        }
+      })
+  
+      leaderboard.identifier = "grp.levelModeBoard"
+      leaderboard.timeScope = .allTime
+      leaderboard.loadScores(completionHandler: {
+        (scores, error) in
+        if ((Defaults?.integer(forKey: "HighLevelR"))! < Int(exactly: (scores?.first?.value)!)!)
+        {
+          Defaults?.set(scores?.first?.value, forKey: "HighLevelR")
+        }
+      })
+  }
     
 }
 
