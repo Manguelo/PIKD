@@ -188,9 +188,10 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
       leaderboard.timeScope = .allTime
       leaderboard.loadScores(completionHandler: {
         (scores, error) in
-        if ((Defaults?.integer(forKey: "SurvivalLevel"))! < Int(exactly: (scores?.first?.value)!)!)
+        let score = scores?.first?.value ?? 0
+        if ((Defaults?.integer(forKey: "SurvivalLevel"))! < Int(exactly: score)!)
         {
-          Defaults?.set(scores?.first?.value, forKey: "SurvivalLevel")
+          Defaults?.set(score, forKey: "SurvivalLevel")
         }
       })
   
@@ -198,13 +199,13 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
       leaderboard.timeScope = .allTime
       leaderboard.loadScores(completionHandler: {
         (scores, error) in
-        if ((Defaults?.integer(forKey: "HighLevelR"))! < Int(exactly: (scores?.first?.value)!)!)
+        let score = scores?.first?.value ?? 1
+        if ((Defaults?.integer(forKey: "HighLevelR"))! < Int(exactly: score)!)
         {
-          Defaults?.set(scores?.first?.value, forKey: "HighLevelR")
+          Defaults?.set(score, forKey: "HighLevelR")
         }
       })
   }
-    
 }
 
 

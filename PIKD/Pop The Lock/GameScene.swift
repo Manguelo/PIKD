@@ -449,23 +449,23 @@ class GameScene: SKScene {
       }
 
         if movingClockwise == true{
-            let tempAngle = CGFloat.random(min: rad - 1.0, max: rad - 2.5)
+            let tempAngle = CGFloat.random(min: rad - 1.2, max: rad - 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
             if gameStarted == true && Dot.name != "doubleDot"{
                 if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
-                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed))
                     Dot.run(SKAction.repeatForever(follow))
                 }
             }
         }
         else if movingClockwise == false{
-            let tempAngle = CGFloat.random(min: rad + 1.0, max: rad + 2.5)
+            let tempAngle = CGFloat.random(min: rad + 1.2, max: rad + 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             Dot.position = Path2.currentPoint
             if gameStarted == true && Dot.name != "doubleDot"{
                 if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
-                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+                    let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed))
                     Dot.run(SKAction.repeatForever(follow).reversed())
                 }
             }
@@ -521,23 +521,23 @@ class GameScene: SKScene {
         }
         
         if movingClockwise == true{
-            let tempAngle = CGFloat.random(min: rad - 1.0, max: rad - 2.5)
+            let tempAngle = CGFloat.random(min: rad - 1.2, max: rad - 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
           if gameStarted == true && Dot.name != "doubleDot"{
             if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
-              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed))
               badDot.run(SKAction.repeatForever(follow))
             }
           }
         }
         else if movingClockwise == false{
-            let tempAngle = CGFloat.random(min: rad + 1.0, max: rad + 2.5)
+            let tempAngle = CGFloat.random(min: rad + 1.2, max: rad + 2.5)
             let Path2 = UIBezierPath(arcCenter: CGPoint(x: Circle.position.x, y: Circle.position.y), radius: 240, startAngle: tempAngle, endAngle: tempAngle + CGFloat(Double.pi * 4), clockwise: true)
             badDot.position = Path2.currentPoint
           if gameStarted == true && Dot.name != "doubleDot"{
             if currentLevel >= 70 && currentLevel < 90 || currentLevel >= 99{
-              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed * 25))
+              let follow = SKAction.follow(Path2.cgPath, asOffset: false, orientToPath: true, speed: CGFloat(350 + gameSpeed))
               badDot.run(SKAction.repeatForever(follow).reversed())
             }
           }
@@ -558,9 +558,9 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            gameSpeed = 16
+            gameSpeed = 20
         }else if currentLevel >= 70 && currentLevel < 80{
-            gameSpeed = 15
+            gameSpeed = 14
         }else if currentLevel > 20 {
             gameSpeed = 20
         }
@@ -581,9 +581,9 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            gameSpeed = 16
+            gameSpeed = 20
         }else if currentLevel >= 70 && currentLevel < 80{
-            gameSpeed = 15
+            gameSpeed = 14
         }else if currentLevel > 20 {
             gameSpeed = 20
         }

@@ -370,7 +370,7 @@ class Survival: SKScene {
             }
             intersected = false
             
-          if tillColorChange == 10
+          if tillColorChange >= 9
           {
             randomHue =  CGFloat(Float(arc4random()) / Float(UINT32_MAX))
             currentColor = UIColor(hue: randomHue, saturation: 0.34, brightness: 0.8, alpha: 1.0)
