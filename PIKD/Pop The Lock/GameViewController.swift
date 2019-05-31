@@ -195,12 +195,13 @@ class GameViewController: UIViewController, GADInterstitialDelegate, GADBannerVi
         }
       })
   
-      leaderboard.identifier = "grp.levelModeBoard"
-      leaderboard.timeScope = .allTime
-      leaderboard.loadScores(completionHandler: {
+      let leaderboard2 = GKLeaderboard(players: [localPlayer])
+      leaderboard2.identifier = "grp.levelModeBoard"
+      leaderboard2.timeScope = .allTime
+      leaderboard2.loadScores(completionHandler: {
         (scores, error) in
         let score = scores?.first?.value ?? 1
-        if ((Defaults?.integer(forKey: "HighLevelR"))! < Int(exactly: score)!)
+        if ((Defaults?.integer(forKey: "HighLevelR"))! < Int(exactly: score)! || (Defaults?.integer(forKey: "HighLevelR"))! >= 176)
         {
           Defaults?.set(score, forKey: "HighLevelR")
         }
