@@ -558,7 +558,7 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            gameSpeed = 20
+            gameSpeed = 16
         }else if currentLevel >= 70 && currentLevel < 80{
             gameSpeed = 14
         }else if currentLevel > 20 {
@@ -581,7 +581,7 @@ class GameScene: SKScene {
         
         if currentLevel >= 60 && currentLevel < 70 ||
            currentLevel >= 80 && currentLevel < 99{
-            gameSpeed = 20
+            gameSpeed = 16
         }else if currentLevel >= 70 && currentLevel < 80{
             gameSpeed = 14
         }else if currentLevel > 20 {
